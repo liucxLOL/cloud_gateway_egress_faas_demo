@@ -7,4 +7,4 @@ if [ ! -d "$CURDIR/bin" ]; then
     mkdir -p "$CURDIR/bin"
 fi
 
-go build -o "$CURDIR/bin/demo"
+GOPROXY=https://goproxy.cn,direct GOOS=linux go build -o "$CURDIR/bin/demo"
