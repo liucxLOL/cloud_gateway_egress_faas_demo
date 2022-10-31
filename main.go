@@ -31,21 +31,37 @@ func gatewayTest(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "gateway_test, req_url:%v, ts:%s", req.URL, time.Now().Format("2006-01-02 15:04:05"))
 }
 
+func gatewayNetworkTest(w http.ResponseWriter, req *http.Request) {
+	protocols := req.URL.Query()["protocol"]
+	if len(protocols) == 0{
+		fmt.Fprintf(w, "non protocol param")
+		return
+	}
+	urls := req.URL.Query()["url"]
+	if len(urls) == 0{
+		fmt.Fprintf(w, "non url param")
+		return
+	}
+
+	fmt.Fprintf(w, AccessOpenApiUrl(protocols[0], urls[0]))
+}
+
 func main() {
 
-	go RunFaasCliLoop(map[string]string{
-		"http_plb":      "http://dev.douyincloud.gateway.egress.ivolces.com",
-		"https_plb":     "https://dev.douyincloud.gateway.egress.ivolces.com",
-		"http_openapi":  "http://developer.toutiao.com",
-		"https_openapi": "https://developer.toutiao.com",
-		"http_openapi2":  "http://open.douyin.com",
-		"https_openapi2": "https://open.douyin.com",
-	})
+	//go RunFaasCliLoop(map[string]string{
+	//	"http_plb":      "http://dev.douyincloud.gateway.egress.ivolces.com",
+	//	"https_plb":     "https://dev.douyincloud.gateway.egress.ivolces.com",
+	//	"http_openapi":  "http://developer.toutiao.com",
+	//	"https_openapi": "https://developer.toutiao.com",
+	//	"http_openapi2":  "http://open.douyin.com",
+	//	"https_openapi2": "https://open.douyin.com",
+	//})
 
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/headers", headers)
 	http.HandleFunc("/v1/ping", ping)
 	http.HandleFunc("/gateway_test", gatewayTest)
+	http.HandleFunc("/gateway_network_test", gatewayNetworkTest)
 
 	http.ListenAndServe(":8000", nil)
 }

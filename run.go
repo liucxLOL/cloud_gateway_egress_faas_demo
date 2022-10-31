@@ -66,3 +66,57 @@ func AccessOpenApi(host string) {
 		log.Printf("url:%v, len resp from openapi:%+v\n", url, len(body))
 	}
 }
+
+func AccessOpenApiUrl(protocol, hostUrl string) string {
+	if protocol == "http" {
+		hostUrl = "http://"+hostUrl
+	} else if protocol == "https" {
+		hostUrl = "https://"+hostUrl
+	} else {
+		str := fmt.Sprintf("invalid protocol. protocol:%v", protocol)
+		fmt.Printf("%v\n", str)
+		return str
+	}
+
+	url := hostUrl
+	method := "POST"
+	//payload := strings.NewReader(`{"access_token": "0801121846765a5a4d2f6b385a68307237534d43397a667865513d3d","appname": "douyin"}`)
+	payloadWithoutToken := strings.NewReader(`{"appname": "douyin"}`)
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, payloadWithoutToken)
+
+	if err != nil {
+		str := fmt.Sprintf("request failed. url:%v, err:%v", url, err)
+		fmt.Printf("%v\n", str)
+		return str
+	}
+	//req.Header.Add("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		str := fmt.Sprintf("net failed. url:%v, err:%v", url, err)
+		fmt.Printf("%v\n", str)
+		return str
+	}
+	defer resp.Body.Close()
+
+	logid := resp.Header.Get("X-Tt-Logid")
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		str := fmt.Sprintf("body failed. logid:%v, url:%v, err:%v", logid, url, err)
+		fmt.Printf("%v\n", str)
+		return str
+	}
+
+	if len(body) < 100 {
+		str := fmt.Sprintf("logid:%v, url:%v, http_code:%v, body:%v", logid, url, resp.StatusCode, string(body))
+		fmt.Printf("%v\n", str)
+		return str
+	}
+	str := fmt.Sprintf("logid:%v, url:%v, http_code:%v, len_body:%v", logid, url, resp.StatusCode, len(body))
+	fmt.Printf("%v\n", str)
+	return str
+
+}
