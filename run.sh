@@ -1,1 +1,2 @@
-cd /opt/application/ && ./demo
+#!/bin/sh
+cd /opt/application/ && ./main
