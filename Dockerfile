@@ -8,14 +8,14 @@ RUN GOPROXY=https://goproxy.cn,direct GOOS=linux GOARCH=amd64 go build -o main .
 
 FROM public-cn-beijing.cr.volces.com/public/base:alpine-3.13
 WORKDIR /opt/application
-USER root
-COPY --from=builder /app/main /app/run.sh /opt/application/
-## 下载证书并放在/etc/ssl/certs下
-#RUN wget https://raw.githubusercontent.com/bytedance/douyincloud_cert/master/douyincloud_egress.crt -o /etc/ssl/certs/douyincloud_egress.crt
-COPY --from=builder /app/douyincloud_egress.crt /etc/ssl/certs/douyin_cloud_egress.crt
 
-ENV TZ=Asia/Shanghai \
-    DEBIAN_FRONTEND=noninteractive
+USER root
+ENV DOUYINCLOUD_CERT_PATH=/etc/ssl/certs/douyincloud_egress.crt
+RUN wget https://raw.githubusercontent.com/bytedance/douyincloud_cert/master/douyincloud_egress.crt -O $DOUYINCLOUD_CERT_PATH
+
+COPY --from=builder /app/main /app/run.sh /opt/application/
+
+#RUN apk add curl
 
 # debian/ubuntu
 #RUN apt install ca-certificates -y
