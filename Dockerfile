@@ -8,23 +8,23 @@ RUN GOPROXY=https://goproxy.cn,direct GOOS=linux GOARCH=amd64 go build -o main .
 
 FROM public-cn-beijing.cr.volces.com/public/base:alpine-3.13
 WORKDIR /opt/application
-
-USER root
-ENV DOUYINCLOUD_CERT_PATH=/etc/ssl/certs/douyincloud_egress.crt
-RUN wget https://raw.githubusercontent.com/bytedance/douyincloud_cert/master/douyincloud_egress.crt -O $DOUYINCLOUD_CERT_PATH
-
 COPY --from=builder /app/main /app/run.sh /opt/application/
 
-#RUN apk add curl
+USER root
+# temp no need
+#ENV DOUYINCLOUD_CERT_PATH=/etc/ssl/certs/douyincloud_egress.crt
+#RUN wget https://raw.githubusercontent.com/bytedance/douyincloud_cert/master/douyincloud_egress.crt -O $DOUYINCLOUD_CERT_PATH
 
-# debian/ubuntu
-#RUN apt install ca-certificates -y
-# alpine
-RUN apk add ca-certificates
-# centos/fedora/rhelca-certificates
-#RUN yum install ca-certificates
+##RUN apk add curl
 
-# 执行信任证书
-RUN update-ca-certificates
+## debian/ubuntu
+##RUN apt install ca-certificates -y
+## alpine
+#RUN apk add ca-certificates
+## centos/fedora/rhelca-certificates
+##RUN yum install ca-certificates
+#
+## 执行信任证书
+#RUN update-ca-certificates
 
 CMD /opt/application/run.sh

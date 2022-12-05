@@ -46,6 +46,7 @@ func gatewayNetworkTest(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, AccessOpenApiUrl(protocol, urls[0]))
 }
 
+
 func main() {
 
 	//go RunFaasCliLoop(map[string]string{
@@ -62,6 +63,8 @@ func main() {
 	http.HandleFunc("/v1/ping", ping)
 	http.HandleFunc("/gateway_test", gatewayTest)
 	http.HandleFunc("/gateway_network_test", gatewayNetworkTest)
+	http.HandleFunc("/gateway_ws_push", gatewayWsPush)
+	http.HandleFunc("/gateway_ws_handle", gatewayWsHandle)
 
 	http.ListenAndServe(":8000", nil)
 }
