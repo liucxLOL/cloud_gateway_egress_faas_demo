@@ -118,5 +118,4 @@ func AccessOpenApiUrl(protocol, hostUrl string) string {
 	str := fmt.Sprintf("logid:%v, url:%v, http_code:%v, len_body:%v", logid, url, resp.StatusCode, len(body))
 	fmt.Printf("%v\n", str)
 	return str
-
 }

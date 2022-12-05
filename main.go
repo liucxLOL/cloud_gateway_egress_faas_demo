@@ -32,10 +32,10 @@ func gatewayTest(w http.ResponseWriter, req *http.Request) {
 }
 
 func gatewayNetworkTest(w http.ResponseWriter, req *http.Request) {
+	protocol := "http"
 	protocols := req.URL.Query()["protocol"]
-	if len(protocols) == 0{
-		fmt.Fprintf(w, "non protocol param")
-		return
+	if len(protocols) > 0 && protocols[0] == "https"{
+		protocol = "https"
 	}
 	urls := req.URL.Query()["url"]
 	if len(urls) == 0{
@@ -43,7 +43,7 @@ func gatewayNetworkTest(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, AccessOpenApiUrl(protocols[0], urls[0]))
+	fmt.Fprintf(w, AccessOpenApiUrl(protocol, urls[0]))
 }
 
 func main() {
