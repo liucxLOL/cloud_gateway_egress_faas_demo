@@ -29,7 +29,7 @@ func gatewayWsPush(w http.ResponseWriter, req *http.Request) {
 	if len(mockPath) > 0{
 		req.URL.Path = mockPath
 	}
-	proxy, err := newProxy("http://ws-push.dycloud-api.service")
+	proxy, err := newProxy("http://developer.toutiao.com")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
