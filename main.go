@@ -63,6 +63,7 @@ func main() {
 	http.HandleFunc("/v1/ping", ping)
 	http.HandleFunc("/gateway_test", gatewayTest)
 	http.HandleFunc("/gateway_network_test", gatewayNetworkTest)
+	http.HandleFunc("/gateway_dns_test", gatewayDnsTest)
 	http.HandleFunc("/gateway_ws_push", gatewayWsPush)
 	http.HandleFunc("/gateway_ws_handle", gatewayWsHandle)
 
